@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  name         String
+  mobileNumber Int           @unique
+  expenses     Expense[]
+  participants Participant[]
+}
+
+model Expense {
+  id           Int           @id @default(autoincrement())
+  description  String
+  method       Method
+  totalSum     Decimal       @db.Decimal(10, 2) // Changed from Int to Decimal
+  participants Participant[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade deletes
+  userId       Int
+}
+
+model Participant {
+  id         Int      @id @default(autoincrement())
+  amountOwed Decimal  @db.Decimal(10, 2) // Changed from Int to Decimal
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  expense    Expense? @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId  Int?
+}
+
+enum Method {
+  Equal
+  Exact
+  Percentage
+}
