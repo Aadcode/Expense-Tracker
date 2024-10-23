@@ -1,6 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { Parser } from "json2csv";
-import { sendEmailWithBalanceSheet } from "../utils/email.service";
+
+import { sendEmailWithBalanceSheet } from "../utils/email.service.js";
 
 const prisma = new PrismaClient();
 
